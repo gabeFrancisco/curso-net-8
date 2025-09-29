@@ -22,7 +22,10 @@ namespace ApiCatalogo.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Categoria>> Get()
         {
-            var categorias = _context.Categorias!.ToList();
+            var categorias = _context.Categorias!
+                .Include(c => c.Produtos)
+                .ToList();
+                
             if (categorias is null)
             {
                 return NotFound();
