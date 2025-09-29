@@ -23,6 +23,7 @@ namespace ApiCatalogo.Controllers
         public ActionResult<IEnumerable<Categoria>> Get()
         {
             var categorias = _context.Categorias!
+                .AsNoTracking()
                 .Include(c => c.Produtos)
                 .ToList();
                 
