@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApiCatalogo.Context;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiCatalogo.Controllers
 {
@@ -38,6 +39,50 @@ namespace ApiCatalogo.Controllers
             {
                 return NotFound();
             }
+
+            return Ok(categoria);
+        }
+
+        [HttpPost]
+        public ActionResult Post(Categoria categoria)
+        {
+            if (categoria is null)
+            {
+                return BadRequest();
+            }
+
+            _context.Categorias!.Add(categoria);
+            _context.SaveChanges();
+
+            return new CreatedAtRouteResult("ObterCategoria", new { id = categoria.CategoriaId });
+        }
+
+        [HttpPut("{id:int}")]
+        public ActionResult Put(int id, Categoria categoria)
+        {
+            if (id != categoria.CategoriaId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(categoria).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            return Ok(categoria);
+        }
+
+        [HttpDelete("{id:int}")]
+        public ActionResult Delete(int id)
+        {
+            var categoria = _context.Categorias!.FirstOrDefault(c => c.CategoriaId == id);
+
+            if (categoria is null)
+            {
+                return NotFound();
+            }
+
+            _context.Categorias!.Remove(categoria);
+            _context.SaveChanges();
 
             return Ok(categoria);
         }
