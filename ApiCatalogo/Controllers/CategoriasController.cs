@@ -22,17 +22,26 @@ namespace ApiCatalogo.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Categoria>> Get()
         {
-            var categorias = _context.Categorias!
-                .AsNoTracking()
-                .Include(c => c.Produtos)
-                .ToList();
-                
-            if (categorias is null)
+            try
             {
-                return NotFound();
-            }
+                var categorias = _context.Categorias!
+                    .AsNoTracking()
+                    .ToList();
 
-            return Ok(categorias);
+                if (categorias is null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(categorias);
+            }
+            catch (Exception)
+            {
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    "Ocorreu um problema ao tratar a sua solicitação!"
+                );
+            }
         }
 
         [HttpGet("{id:int}", Name = "ObterCategoria")]
