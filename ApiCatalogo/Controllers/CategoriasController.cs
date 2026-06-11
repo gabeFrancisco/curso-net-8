@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ApiCatalogo.Context;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiCatalogo.Controllers
@@ -45,7 +42,7 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpGet("{id:int}", Name = "ObterCategoria")]
-        public ActionResult<Categoria> Get(int id)
+        public ActionResult<Categoria> Get(int id, [BindRequired]string nome)
         {
             var categoria = _context.Categorias!.FirstOrDefault(c => c.CategoriaId == id);
             if (categoria is null)
