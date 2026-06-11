@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using ApiCatalogo.Context;
+using ApiCatalogo.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-    
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -17,6 +18,8 @@ string conn = builder.Configuration.GetConnectionString("DefaultConnection")!;
 
 builder.Services.AddDbContext<AppDbContext>(
     options => options.UseNpgsql(conn));
+
+builder.Services.AddTransient<IMeuServico, MeuServico>();
 
 var app = builder.Build();
 

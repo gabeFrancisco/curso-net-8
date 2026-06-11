@@ -1,4 +1,5 @@
 using ApiCatalogo.Context;
+using ApiCatalogo.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,18 @@ namespace ApiCatalogo.Controllers
         public CategoriasController(AppDbContext context)
         {
             _context = context;
+        }
+
+        [HttpGet("UsandoFromServices/{nome}")]
+        public ActionResult<string> GetSaudacaoFromServices([FromServices]IMeuServico meuServico, string nome)
+        {
+            return meuServico.Saudacao(nome);
+        }
+
+    [HttpGet("SemUsarFromServices/{nome}")]
+        public ActionResult<string> SemUsarFromServices(IMeuServico meuServico, string nome)
+        {
+            return meuServico.Saudacao(nome);
         }
 
         [HttpGet]
