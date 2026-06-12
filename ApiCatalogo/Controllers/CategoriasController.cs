@@ -41,9 +41,10 @@ namespace ApiCatalogo.Controllers
             return meuServico.Saudacao(nome);
         }
 
-    [HttpGet("SemUsarFromServices/{nome}")]
+        [HttpGet("SemUsarFromServices/{nome}")]
         public ActionResult<string> SemUsarFromServices(IMeuServico meuServico, string nome)
         {
+            throw new Exception();
             return meuServico.Saudacao(nome);
         }
 
