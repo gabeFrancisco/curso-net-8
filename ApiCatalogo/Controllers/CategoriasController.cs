@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using ApiCatalogo.Context;
 using ApiCatalogo.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +13,27 @@ namespace ApiCatalogo.Controllers
     public class CategoriasController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public CategoriasController(AppDbContext context)
+        public CategoriasController(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
+
+        [HttpGet("LerArquivoConfiguracao")]
+        public string[] GetValores()
+        {
+            var chave1 = _configuration["chave1"]!;
+            var chave2 = _configuration["chave2"]!;
+            var secao1 = _configuration["secao1"]!.ToList();
+            return [
+                chave1,
+                chave2,
+                JsonSerializer.Serialize(secao1)
+            ];
+        }
+
 
         [HttpGet("UsandoFromServices/{nome}")]
         public ActionResult<string> GetSaudacaoFromServices([FromServices]IMeuServico meuServico, string nome)
