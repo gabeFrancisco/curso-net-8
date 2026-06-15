@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ApiCatalogo.Context;
+using ApiCatalogo.Filters;
 using ApiCatalogo.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -36,7 +37,7 @@ namespace ApiCatalogo.Controllers
 
 
         [HttpGet("UsandoFromServices/{nome}")]
-        public ActionResult<string> GetSaudacaoFromServices([FromServices]IMeuServico meuServico, string nome)
+        public ActionResult<string> GetSaudacaoFromServices([FromServices] IMeuServico meuServico, string nome)
         {
             return meuServico.Saudacao(nome);
         }
@@ -44,11 +45,11 @@ namespace ApiCatalogo.Controllers
         [HttpGet("SemUsarFromServices/{nome}")]
         public ActionResult<string> SemUsarFromServices(IMeuServico meuServico, string nome)
         {
-            throw new Exception();
             return meuServico.Saudacao(nome);
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         public ActionResult<IEnumerable<Categoria>> Get()
         {
             try
@@ -57,10 +58,10 @@ namespace ApiCatalogo.Controllers
                     .AsNoTracking()
                     .ToList();
 
-                if (categorias is null)
-                {
-                    return NotFound();
-                }
+                // if (categorias is null)
+                // {
+                //     return NotFound();
+                // }
 
                 return Ok(categorias);
             }
@@ -74,7 +75,7 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpGet("{id:int}", Name = "ObterCategoria")]
-        public ActionResult<Categoria> Get(int id, [BindRequired]string nome)
+        public ActionResult<Categoria> Get(int id, [BindRequired] string nome)
         {
             var categoria = _context.Categorias!.FirstOrDefault(c => c.CategoriaId == id);
             if (categoria is null)

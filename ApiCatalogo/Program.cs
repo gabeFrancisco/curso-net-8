@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using ApiCatalogo.Context;
 using ApiCatalogo.Extensions;
+using ApiCatalogo.Filters;
 using ApiCatalogo.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,8 @@ string conn = builder.Configuration.GetConnectionString("DefaultConnection")!;
 
 builder.Services.AddDbContext<AppDbContext>(
     options => options.UseNpgsql(conn));
+
+builder.Services.AddScoped<ApiLoggingFilter>();
 
 builder.Services.AddTransient<IMeuServico, MeuServico>();
 
